@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
-public class Main : MonoBehaviour {
+public class Main : Singleton<Main> {
+    public Image bg;
+    public Ship ship;
 
 	// Use this for initialization
 	void Start () {
@@ -10,6 +13,6 @@ public class Main : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+	    
 	}
 }

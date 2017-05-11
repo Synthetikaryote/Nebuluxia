@@ -3,9 +3,14 @@ using System.Collections;
 
 public class Ship : MonoBehaviour {
     public Vector2 p, v;
-    float maxThrust = 1000f;
+    float maxThrust = 2000f;
     float angle = 0f;
     float rotationSpeed = 720f; // deg/sec
+    float slowDownThrustFactor = 2f;
+    float offAngleThrustCurve = 0.5f;
+    float thrustSpeedFactorMax = 1000f;
+    float thrustSpeedFactorCurve = 3f;
+    float thrustSpeedFactorMin = 0.1f;
 
 	// Use this for initialization
 	void Start () {
@@ -29,7 +34,13 @@ public class Ship : MonoBehaviour {
         angle = Mathf.MoveTowardsAngle(angle, targetA, rotationSpeed * Time.deltaTime);
         var heading = targetDirection.normalized; // new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad)).normalized;
         var vA = Mathf.Atan2(v.y, v.x) * Mathf.Rad2Deg;
-        var thrust = maxThrust; // (1f - Mathf.Clamp01(Mathf.DeltaAngle(angle, targetA) / 90f)) * maxThrust;
+        //var thrust = maxThrust; // (1f - Mathf.Clamp01(Mathf.DeltaAngle(angle, targetA) / 90f)) * maxThrust;
+        var slowDownInv = 1f / slowDownThrustFactor;
+        var dA = Mathf.Clamp01(Mathf.Abs(Mathf.DeltaAngle(vA, targetA)) / 180f);
+        var angleFactor = (slowDownInv + Mathf.Pow(dA, offAngleThrustCurve) * (1f - slowDownInv));
+        var speedFactor = (1f - Mathf.Pow(Mathf.Clamp01(v.magnitude / thrustSpeedFactorMax), thrustSpeedFactorCurve)) * (1f - thrustSpeedFactorMin) + thrustSpeedFactorMin;
+        Debug.Log(speedFactor);
+        var thrust = speedFactor * angleFactor * maxThrust;
         var dv = heading * Time.deltaTime * thrust;
         // if slowing down, come to a stop rather than go past
         if (targetV.sqrMagnitude < 0.1f && Mathf.DeltaAngle(targetA, vA) > 90 && v.sqrMagnitude < dv.sqrMagnitude)

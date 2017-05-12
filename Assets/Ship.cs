@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Ship : MonoBehaviour {
+public class Ship : Singleton<Ship> {
     public Vector2 p, v;
     float maxThrust = 2000f;
     float angle = 0f;
@@ -39,7 +39,6 @@ public class Ship : MonoBehaviour {
         var dA = Mathf.Clamp01(Mathf.Abs(Mathf.DeltaAngle(vA, targetA)) / 180f);
         var angleFactor = (slowDownInv + Mathf.Pow(dA, offAngleThrustCurve) * (1f - slowDownInv));
         var speedFactor = (1f - Mathf.Pow(Mathf.Clamp01(v.magnitude / thrustSpeedFactorMax), thrustSpeedFactorCurve)) * (1f - thrustSpeedFactorMin) + thrustSpeedFactorMin;
-        Debug.Log(speedFactor);
         var thrust = speedFactor * angleFactor * maxThrust;
         var dv = heading * Time.deltaTime * thrust;
         // if slowing down, come to a stop rather than go past
@@ -58,6 +57,6 @@ public class Ship : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        Main.Instance.bg.rectTransform.anchoredPosition = -p;
+        Main.Instance.bg.rectTransform.anchoredPosition = -p * 0.01f;
 	}
 }

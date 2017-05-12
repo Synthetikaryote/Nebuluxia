@@ -9,7 +9,7 @@ public class Star : MonoBehaviour {
     public void Setup(Transform parent, Canvas canvas)
     {
         var canvasRT = canvas.GetComponent<RectTransform>();
-        size = new Vector2(canvasRT.sizeDelta.x * canvasRT.localScale.x, canvasRT.sizeDelta.y * canvasRT.localScale.y);
+        size = canvasRT.sizeDelta;// new Vector2(canvasRT.sizeDelta.x * canvasRT.localScale.x, canvasRT.sizeDelta.y * canvasRT.localScale.y);
         var rt = GetComponent<RectTransform>();
         rt.SetParent(parent);
         rt.localScale = Vector3.one;
@@ -33,7 +33,7 @@ public class Star : MonoBehaviour {
         }
 
         rt.sizeDelta = Vector3.one * Random.Range(0.8f, 4f);
-        moveRate = Random.Range(0.6f, 1.5f);
+        moveRate = Random.Range(0.6f, 1.0f);
         lastPlayerPos = Ship.Instance.p;
     }
 

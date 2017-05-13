@@ -9,8 +9,8 @@ public class Ship : Singleton<Ship> {
     float angle = 0f;
     float rotationSpeed = 1080f; // deg/sec
     float offAngleThrustCurve = 1.4f;
-    float thrustSpeedFactorMax = 1000f;
-    float thrustSpeedFactorCurve = 0.2f;
+    float thrustSpeedFactorMax = 4000f;
+    float thrustSpeedFactorCurve = 0.4f;
     float thrustSpeedFactorMin = 0f;
 
 	// Use this for initialization
@@ -49,7 +49,7 @@ public class Ship : Singleton<Ship> {
         p += v * Time.deltaTime;
 
         // angle
-        var thrustOn = dv.sqrMagnitude > 0.1f || v.sqrMagnitude > 0.1f;
+        var thrustOn = dv.sqrMagnitude > 0.5f || v.sqrMagnitude > 0.5f;
         if (thrustOn)
         {
             var euler = transform.localEulerAngles;
@@ -59,7 +59,7 @@ public class Ship : Singleton<Ship> {
 
         // particles
         var thrusterThrust = thrustOn ? dv.magnitude / Time.deltaTime : 0f;
-        var thrustFactor = thrustOn ? Mathf.Clamp01(thrusterThrust / (maxThrust * 10f)) : 0f;
+        var thrustFactor = thrustOn ? thrusterThrust / maxThrust * 0.1f : 0f;
         thrustParticles.startSize = thrustFactor * 16f;
         var tp = thrustParticles.transform.localPosition;
         tp.y = -300f + thrustFactor * -10000f;
@@ -69,6 +69,6 @@ public class Ship : Singleton<Ship> {
 
     // Update is called once per frame
     void Update () {
-        Main.Instance.bg.rectTransform.anchoredPosition = -p * 1f;
+        Main.Instance.bg.rectTransform.anchoredPosition = -p * 0.01f;
 	}
 }

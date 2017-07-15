@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class StarField : MonoBehaviour {
     public GameObject starPrefab;
 
-    int numStars = 100;
+    int numStars = 30;
     List<RectTransform> stars;
 
 	// Use this for initialization
